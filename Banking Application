@@ -1,0 +1,131 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+class Account {
+    private String name;
+    private double balance;
+    
+    public Account(String name) {
+        this.name = name;
+        this.balance = 0.0;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+            System.out.println("Deposited: " + amount);
+        } else {
+            System.out.println("Invalid deposit amount.");
+        }
+    }
+
+    public void withdraw(double amount) {
+        if (amount > 0 && amount <= balance) {
+            balance -= amount;
+            System.out.println("Withdrawn: " + amount);
+        } else {
+            System.out.println("Insufficient funds or invalid withdrawal amount.");
+        }
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+}
+
+public class BankApp {
+    private static ArrayList<Account> accounts = new ArrayList<>();
+    private static Scanner scanner = new Scanner(System.in);
+
+    private static void createAccount() {
+        System.out.print("Enter account holder's name: ");
+        String name = scanner.nextLine();
+        Account newAccount = new Account(name);
+        accounts.add(newAccount);
+        System.out.println("Account created for " + name);
+    }
+
+    private static Account findAccount(String name) {
+        for (Account account : accounts) {
+            if (account.getName().equalsIgnoreCase(name)) {
+                return account;
+            }
+        }
+        return null;
+    }
+
+    private static void displayMenu() {
+        System.out.println("\n--- Bank Menu ---");
+        System.out.println("1. Create Account");
+        System.out.println("2. Deposit Money");
+        System.out.println("3. Withdraw Money");
+        System.out.println("4. Check Balance");
+        System.out.println("5. Exit");
+        System.out.print("Enter your choice: ");
+    }
+
+    public static void main(String[] args) {
+        while (true) {
+            displayMenu();
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (choice) {
+                case 1:
+                    createAccount();
+                    break;
+
+                case 2:
+                    System.out.print("Enter account holder's name: ");
+                    String depositName = scanner.nextLine();
+                    Account depositAccount = findAccount(depositName);
+                    if (depositAccount != null) {
+                        System.out.print("Enter deposit amount: ");
+                        double depositAmount = scanner.nextDouble();
+                        scanner.nextLine();
+                        depositAccount.deposit(depositAmount);
+                    } else {
+                        System.out.println("Account not found!");
+                    }
+                    break;
+
+                case 3:
+                    System.out.print("Enter account holder's name: ");
+                    String withdrawName = scanner.nextLine();
+                    Account withdrawAccount = findAccount(withdrawName);
+                    if (withdrawAccount != null) {
+                        System.out.print("Enter withdrawal amount: ");
+                        double withdrawAmount = scanner.nextDouble();
+                        scanner.nextLine();
+                        withdrawAccount.withdraw(withdrawAmount);
+                    } else {
+                        System.out.println("Account not found!");
+                    }
+                    break;
+
+                case 4:
+                    System.out.print("Enter account holder's name: ");
+                    String balanceName = scanner.nextLine();
+                    Account balanceAccount = findAccount(balanceName);
+                    if (balanceAccount != null) {
+                        System.out.println("Balance for " + balanceName + ": $" + balanceAccount.getBalance());
+                    } else {
+                        System.out.println("Account not found!");
+                    }
+                    break;
+
+                case 5:
+                    System.out.println("Exiting the application...");
+                    scanner.close();
+                    return;
+
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        }
+    }
+}
